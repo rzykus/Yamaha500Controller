@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tickWrap: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
   },
   tick: {

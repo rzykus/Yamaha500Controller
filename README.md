@@ -5,7 +5,7 @@ A simple Expo Go app that controls a Yamaha R-N500 on your home Wi-Fi. There is 
 Default receiver IP: `192.168.68.65`  
 Control URL: `POST http://IP/YamahaRemoteControl/ctrl`
 
-This project uses Expo SDK 57, which matches the current App Store Expo Go app.
+This project uses Expo SDK 58, which matches the current App Store Expo Go app.
 
 ## What you need
 
