@@ -3,6 +3,9 @@
     "name": "Yamaha500 controller",
     "slug": "yamaha500-controller",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",

@@ -1,0 +1,65 @@
+name: EAS Update
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update:
+    name: Publish preview update
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "::error::Trūksta GitHub Actions secret EXPO_TOKEN. Sukurkite Expo access token (expo.dev → Account settings → Access tokens) ir įrašykite jį kaip repository secret EXPO_TOKEN (Settings → Secrets and variables → Actions). Žiūrėkite README skyrių „Automatiniai Expo atnaujinimai“."
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Link existing EAS project
+        run: node scripts/link-eas-project.js
+
+      - name: Commit linked project id
+        id: link
+        run: |
+          if git diff --quiet -- app.json; then
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.json
+          git commit -m "Link the existing yamaha500-controller EAS project."
+          echo "committed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Publish preview update
+        env:
+          GIT_MESSAGE_FILE: ${{ github.event_path }}
+        run: |
+          MESSAGE="$(jq -r '.head_commit.message // empty' "$GIT_MESSAGE_FILE")"
+          npx eas-cli update --branch preview --message "$GITHUB_SHA $MESSAGE" --non-interactive
+
+      - name: Push linked project id
+        if: steps.link.outputs.committed == 'true'
+        run: git push origin HEAD:master

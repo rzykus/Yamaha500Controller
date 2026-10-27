@@ -50,3 +50,14 @@ If a request fails, the app shows:
 ## Local Network permission later
 
 iPhone Settings → Expo Go → Local Network → On.
+
+## Automatiniai Expo atnaujinimai
+
+Kiekvienas push į `master` paskelbia programą į Expo šaką `preview` (SDK 58). Tam GitHub turi turėti slaptą raktą `EXPO_TOKEN`.
+
+1. Atidarykite [expo.dev](https://expo.dev) → Account settings → Access tokens: https://expo.dev/settings/access-tokens
+2. Paspauskite Create token, nukopijuokite raktą (jis rodomas tik vieną kartą).
+3. GitHub repozitorijoje atidarykite Settings → Secrets and variables → Actions → New repository secret.
+4. Name: `EXPO_TOKEN`. Value: nukopijuotas raktas.
+
+Jei rakto nėra, workflow sustoja ir parašo, kad trūksta `EXPO_TOKEN`. Kai raktą įrašysite, Actions lange atidarykite nepavykusį paleidimą ir paspauskite Re-run. Naujas atnaujinimas bus šakoje `preview`: SDK 58, runtime `exposdk:58.0.0`. Telefone atidarykite tą naują atnaujinimą.
