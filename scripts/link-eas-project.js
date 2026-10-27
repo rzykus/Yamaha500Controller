@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SLUG = 'yamaha500-controller';
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
 const MAX_PAGES = 10;
 
 function updatesUrl(projectId) {
@@ -62,10 +62,13 @@ async function graphql(token, query, variables) {
   return body.data;
 }
 
-async function loadAccounts(token) {
+async function loadAccounts(token, graphqlFn = graphql) {
+  if (PAGE_SIZE > 50) {
+    throw new Error('Expo API apps limit turi būti ne didesnis kaip 50.');
+  }
   const accountsById = new Map();
   for (let page = 0; page < MAX_PAGES; page += 1) {
-    const data = await graphql(
+    const data = await graphqlFn(
       token,
       `query MeApps($offset: Int!, $limit: Int!) {
         meActor {
@@ -143,7 +146,14 @@ async function main() {
   }
 }
 
-module.exports = { findProjects, applyProject, updatesUrl };
+module.exports = {
+  findProjects,
+  applyProject,
+  updatesUrl,
+  loadAccounts,
+  PAGE_SIZE,
+  MAX_PAGES,
+};
 
 if (require.main === module) {
   main().catch((error) => {
