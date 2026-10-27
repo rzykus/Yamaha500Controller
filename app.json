@@ -25,6 +25,14 @@
     },
     "plugins": [
       "expo-status-bar"
-    ]
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/b1944d8b-faf9-4342-9cee-89871c43794c"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b1944d8b-faf9-4342-9cee-89871c43794c"
+      }
+    }
   }
 }
